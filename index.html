@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Karnataka - Tourism Guide</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        img {
+            max-width: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(rgb(242, 194, 1), rgba(189, 15, 15, 0.207)), url('/api/placeholder/1200/500') center/cover no-repeat;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fffefd00;
+        }
+        
+        .header-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #FF6B6B;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #ff4f4f;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FF6B6B;
+        }
+        
+        .menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .menu li {
+            margin-left: 2rem;
+        }
+        
+        .menu a {
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #FF6B6B;
+            transition: width 0.3s ease;
+        }
+        
+        .menu a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Featured Destinations */
+        .section-title {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+            color: #333;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #FF6B6B;
+            margin: 0.8rem auto;
+        }
+        
+        .destinations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .destination-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-image {
+            height: 200px;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+        
+        .card-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .read-more {
+            color: #FF6B6B;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        /* City Details Section */
+        .city-details {
+            display: none;
+            padding: 2rem 0;
+            background-color: #f9f9f9;
+        }
+        
+        .city-details.active {
+            display: block;
+        }
+        
+        .city-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/400') center/cover no-repeat;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .city-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .city-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-text h3 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .attractions, .accommodation, .dining {
+            margin-bottom: 3rem;
+        }
+        
+        .place-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .place-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .place-img {
+            height: 150px;
+        }
+        
+        .place-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .place-info {
+            padding: 1rem;
+        }
+        
+        .place-info h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .place-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating {
+            color: #FF6B6B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: #555;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #FF6B6B;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column a:hover {
+            color: #FF6B6B;
+        }
+        
+        .social-media a {
+            display: inline-block;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Newsletter Form */
+        .newsletter input {
+            padding: 0.8rem;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .newsletter button {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .newsletter button:hover {
+            background-color: #ff4f4f;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background-color: #f9f9f9;
+            padding: 4rem 0;
+        }
+        
+        .testimonial-carousel {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .testimonial-slide {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+        }
+        
+        .testimonial-slide.active {
+            display: block;
+        }
+        
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1rem;
+        }
+        
+        .testimonial-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .testimonial-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #FF6B6B;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .testimonial-carousel-btn:hover {
+            background-color: #ff4f4f;
+        }
+        
+        .prev-btn {
+            left: -20px;
+        }
+        
+        .next-btn {
+            right: -20px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .city-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 70px);
+                background-color: white;
+                flex-direction: column;
+                padding: 2rem;
+                transition: left 0.3s ease;
+            }
+            
+            .menu.active {
+                left: 0;
+            }
+            
+            .menu li {
+                margin: 1.5rem 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .testimonial-carousel-btn {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="#">Explore Karnataka</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+            <ul class="menu">
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#experiences">Experiences</a></li>
+                <li><a href="#plan">Plan Your Trip</a></li>
+                <li><a href="#about">About Karnataka</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <h1>Discover the Magic of Karnataka</h1>
+            <p>Experience the rich heritage, breathtaking landscapes, and vibrant culture of South India's jewel</p>
+            <a href="#destinations" class="btn">Explore Destinations</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Featured Destinations -->
+        <section id="destinations">
+            <div class="container">
+                <h2 class="section-title">Popular Destinations</h2>
+                <div class="destinations">
+                    <!-- Bangalore -->
+                    <div class="destination-card" data-city="bangalore">
+                        <div class="card-image">
+                            <img src="bangalore.jpeg" alt="Bangalore">
+                        </div>
+                        <div class="card-content">
+                            <h3>Bangalore</h3>
+                            <p>The Silicon Valley of India, known for its pleasant climate, gardens, parks, and vibrant nightlife.</p>
+                            <a href="#" class="read-more">Explore Bangalore</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mysore -->
+                    <div class="destination-card" data-city="mysore">
+                        <div class="card-image">
+                            <img src="mysuru.jpeg" alt="Mysore">
+                        </div>
+                        <div class="card-content">
+                            <h3>Mysore</h3>
+                            <p>The cultural capital of Karnataka, famous for its majestic palace, silk, sandalwood, and yoga traditions.</p>
+                            <a href="#" class="read-more">Explore Mysore</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Hampi -->
+                    <div class="destination-card" data-city="hampi">
+                        <div class="card-image">
+                            <img src="hampi.jpeg" alt="Hampi">
+                        </div>
+                        <div class="card-content">
+                            <h3>Hampi</h3>
+                            <p>A UNESCO World Heritage Site with stunning ruins of the Vijayanagara Empire, boulder-strewn landscapes, and ancient temples.</p>
+                            <a href="#" class="read-more">Explore Hampi</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Coorg -->
+                    <div class="destination-card" data-city="coorg">
+                        <div class="card-image">
+                            <img src="coorg.jpeg" alt="Coorg">
+                        </div>
+                        <div class="card-content">
+                            <h3>Coorg</h3>
+                            <p>The Scotland of India, renowned for its coffee plantations, misty hills, and rich Kodava culture.</p>
+                            <a href="#" class="read-more">Explore Coorg</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Gokarna -->
+                    <div class="destination-card" data-city="gokarna">
+                        <div class="card-image">
+                            <img src="gokarna.jpeg" alt="Gokarna">
+                        </div>
+                        <div class="card-content">
+                            <h3>Gokarna</h3>
+                            <p>A serene beach town with pristine beaches, temples, and a laid-back vibe perfect for relaxation.</p>
+                            <a href="#" class="read-more">Explore Gokarna</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Badami -->
+                    <div class="destination-card" data-city="badami">
+                        <div class="card-image">
+                            <img src="badami.jpeg" alt="Badami">
+                        </div>
+                        <div class="card-content">
+                            <h3>Badami</h3>
+                            <p>Ancient cave temples carved out of sandstone hills, featuring exquisite sculptures and archaeological wonders.</p>
+                            <a href="#" class="read-more">Explore Badami</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- City Details Sections -->
+        
+        <!-- Bangalore Details -->
+        <section id="bangalore-details" class="city-details">
+            <div class="city-header">
+                <div class="container">
+                    <h2>Bangalore - Garden City</h2>
+                    <p>The tech hub of India with a perfect blend of tradition and modernity</p>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="city-info">
+                    <div class="info-text">
+                        <h3>About Bangalore</h3>
+                        <p>Bangalore, officially known as Bengaluru, is the capital of Karnataka state. Known for its pleasant climate throughout the year, the city is a vibrant cosmopolitan hub that beautifully blends its colonial past with cutting-edge technology and innovation.</p>
+                        <p>Home to numerous parks, lakes, and gardens, Bangalore earned the nickname "Garden City." It's also India's leading IT exporter, hosting numerous tech giants, startups, and research institutions, giving it another moniker: "Silicon Valley of India."</p>
+                    </div>
+                    <div class="info-img">
+                        <img src="/api/placeholder/500/300" alt="Bangalore Cityscape">
+                    </div>
+                </div>
+                
+                <div class="attractions">
+                    <h3>Top Attractions</h3>
+                    <div class="place-cards">
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Lalbagh Botanical Garden">
+                            </div>
+                            <div class="place-info">
+                                <h4>Lalbagh Botanical Garden</h4>
+                                <p>A 240-acre garden with rare plants, a glass house, and a lake.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Open: 6:00 AM - 7:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Bangalore Palace">
+                            </div>
+                            <div class="place-info">
+                                <h4>Bangalore Palace</h4>
+                                <p>Tudor-style architecture with elegant woodcarvings and paintings.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Open: 10:00 AM - 5:30 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Cubbon Park">
+                            </div>
+                            <div class="place-info">
+                                <h4>Cubbon Park</h4>
+                                <p>Historic park spanning 300 acres with diverse flora and fauna.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Open: 6:00 AM - 6:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accommodation">
+                    <h3>Where to Stay</h3>
+                    <div class="place-cards">
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Taj MG Road">
+                            </div>
+                            <div class="place-info">
+                                <h4>Taj MG Road</h4>
+                                <p>Luxury hotel in the heart of the city with excellent amenities.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Price: ₹12,000/night onwards</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="The Leela Palace">
+                            </div>
+                            <div class="place-info">
+                                <h4>The Leela Palace</h4>
+                                <p>Opulent 5-star hotel with world-class spa and dining.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Price: ₹18,000/night onwards</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Ibis Bengaluru">
+                            </div>
+                            <div class="place-info">
+                                <h4>Ibis Bengaluru</h4>
+                                <p>Contemporary budget-friendly hotel with modern facilities.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Price: ₹4,500/night onwards</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dining">
+                    <h3>Where to Eat</h3>
+                    <div class="place-cards">
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Vidyarthi Bhavan">
+                            </div>
+                            <div class="place-info">
+                                <h4>Vidyarthi Bhavan</h4>
+                                <p>Iconic South Indian restaurant famous for its crispy dosas.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Price: ₹ (Budget-friendly)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Karavalli">
+                            </div>
+                            <div class="place-info">
+                                <h4>Karavalli</h4>
+                                <p>Award-winning restaurant serving coastal Karnataka cuisine.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Price: ₹₹₹ (Fine dining)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Toit Brewpub">
+                            </div>
+                            <div class="place-info">
+                                <h4>Toit Brewpub</h4>
+                                <p>Popular brewpub with craft beers and eclectic menu.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Price: ₹₹ (Moderate)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="#destinations" class="back-btn">Back to Destinations</a>
+            </div>
+        </section>
+        
+        <!-- Mysore Details -->
+        <section id="mysore-details" class="city-details">
+            <div class="city-header">
+                <div class="container">
+                    <h2>Mysore - City of Palaces</h2>
+                    <p>A royal city known for its grand heritage, silk sarees, and sandalwood</p>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="city-info">
+                    <div class="info-text">
+                        <h3>About Mysore</h3>
+                        <p>Mysore (or Mysuru) is Karnataka's cultural capital and the second-largest city in the state. Once the capital of the Wodeyar dynasty, the city retains a regal charm with magnificent palaces, heritage buildings, and well-planned gardens.</p>
+                        <p>Famous for the grand Mysore Palace, Dasara celebrations, silk sarees, sandalwood products, and traditional Mysore Pak sweet, the city offers visitors a deep dive into Karnataka's rich cultural heritage.</p>
+                    </div>
+                    <div class="info-img">
+                        <img src="/api/placeholder/500/300" alt="Mysore Palace">
+                    </div>
+                </div>
+                
+                <div class="attractions">
+                    <h3>Top Attractions</h3>
+                    <div class="place-cards">
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Mysore Palace">
+                            </div>
+                            <div class="place-info">
+                                <h4>Mysore Palace</h4>
+                                <p>A magnificent royal residence and the symbol of Mysore.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Open: 10:00 AM - 5:30 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Chamundi Hills">
+                            </div>
+                            <div class="place-info">
+                                <h4>Chamundi Hills</h4>
+                                <p>Sacred hill with the Chamundeshwari Temple and Nandi statue.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Open: 7:30 AM - 2:00 PM, 3:30 PM - 9:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Brindavan Gardens">
+                            </div>
+                            <div class="place-info">
+                                <h4>Brindavan Gardens</h4>
+                                <p>Terraced gardens with fountains below the Krishna Raja Sagar dam.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Open: 6:00 AM - 8:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accommodation">
+                    <h3>Where to Stay</h3>
+                    <div class="place-cards">
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Radisson Blu Plaza">
+                            </div>
+                            <div class="place-info">
+                                <h4>Radisson Blu Plaza</h4>
+                                <p>Contemporary hotel with elegant rooms and excellent facilities.</p>
+                                <div class="rating">★★★★★</div>
+                                <p>Price: ₹7,500/night onwards</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Royal Orchid Metropole">
+                            </div>
+                            <div class="place-info">
+                                <h4>Royal Orchid Metropole</h4>
+                                <p>Heritage hotel built during the Wodeyar dynasty's reign.</p>
+                                <div class="rating">★★★★☆</div>
+                                <p>Price: ₹6,000/night onwards</p>
+                            </div>
+                        </div>
+                        
+                        <div class="place-card">
+                            <div class="place-img">
+                                <img src="/api/placeholder/300/200" alt="Hotel Roopa">
+                            </div>
+                            <div class="place-info">
